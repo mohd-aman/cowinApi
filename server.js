@@ -3,7 +3,7 @@ const path = require("path");
 const cp = require("child_process");
 const nodemailer = require("nodemailer");
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 require("dotenv").config();
 // console.log(process.env)
 let transporter = nodemailer.createTransport({
@@ -17,11 +17,13 @@ let transporter = nodemailer.createTransport({
   });
 
 
-app.get("/:pin/:age/:email/",async function(req,res){
+app.get(":pin/:age/:email/",async function(req,res){
     let pin = req.params.pin;
     let email = req.params.email;
     let age = req.params.age;
-    let arr = cp.execSync(`node script ${pin} ${age}`);
+    console.log(age);
+    let scriptPath = path.join(__dirname,'script.js')
+    let arr = cp.execSync(`node ${scriptPath} ${pin} ${age}`);
     // console.log(arr+"");
     res.send(arr);
     let info = await transporter.sendMail({
@@ -31,7 +33,6 @@ app.get("/:pin/:age/:email/",async function(req,res){
         html: "<b>Schedule of Vaccination</b>", // html body
         attachments:[{path:"./Schedule.xlsx"}]
       });
-    
       console.log("Message sent: %s", info.messageId);
 })
 

@@ -17,7 +17,7 @@ let transporter = nodemailer.createTransport({
   });
 
 
-app.get("/details/:pin/:age/:email",async function(req,res){
+app.get("/:pin/:age/:email/",async function(req,res){
     let pin = req.params.pin;
     let email = req.params.email;
     let age = req.params.age;
